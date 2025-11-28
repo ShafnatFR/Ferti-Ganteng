@@ -25,6 +25,7 @@ export interface ChatSession {
     id: string;
     title: string;
     date: string;
+    isPinned?: boolean; // Added property
     messages: ChatMessage[];
 }
 
