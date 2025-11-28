@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eco-Formulator AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sage: {
+              50: '#F4F7F6',
+              100: '#E3EBE7',
+              200: '#C6D6CF',
+              300: '#A9C2B7',
+              400: '#8DA399', // Primary Brand Color
+              500: '#728A7F',
+              600: '#5A6F66',
+              700: '#43544D',
+              800: '#2C3934',
+              900: '#151E1B',
+            },
+            soil: {
+              400: '#A1887F',
+              600: '#6D4C41', // Brown
+            }
+          },
+          animation: {
+            'scan': 'scan 2s linear infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            scan: {
+              '0%': { transform: 'translateY(0)' },
+              '100%': { transform: 'translateY(100%)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #F4F7F6;
+      font-family: 'Inter', sans-serif;
+      overscroll-behavior-y: none;
+    }
+    /* Hide scrollbar for clean mobile look */
+    ::-webkit-scrollbar {
+      width: 0px;
+      background: transparent;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
