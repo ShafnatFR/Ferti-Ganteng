@@ -89,6 +89,32 @@ class GeminiService {
             return "Maaf, terjadi gangguan koneksi ke otak AI saya.";
         }
     }
+
+    /**
+     * Mendapatkan diagnosa dan solusi masalah kompos.
+     */
+    async getTroubleshootingAdvice(problemType: string, severity: string, userDescription: string): Promise<string> {
+        try {
+            const prompt = `
+                Peran: Ahli Kompos Organik.
+                Masalah: ${problemType}
+                Tingkat Keparahan: ${severity}
+                Deskripsi User: ${userDescription}
+
+                Tugas: Berikan solusi langkah demi langkah (Step-by-step) yang konkret untuk mengatasi masalah ini.
+                Format Output: Text polos, gunakan poin-poin (-), maksimal 100 kata. Langsung ke solusi. JANGAN pakai markdown bold (**).
+            `;
+
+            const response = await this.client.models.generateContent({
+                model: this.modelName,
+                contents: prompt
+            });
+
+            return response.text || "Lakukan aerasi dan atur kelembaban.";
+        } catch (error) {
+            return "Gagal mendapatkan saran AI. Coba cek koneksi internet.";
+        }
+    }
 }
 
 // Export sebagai Singleton Instance

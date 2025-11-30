@@ -1,9 +1,16 @@
 
+export interface IssueDetails {
+    severity: 'low' | 'medium' | 'critical';
+    aiSolution: string;
+    isResolved: boolean;
+}
+
 export interface LogEntry {
     date: string;
     title: string;
     description: string;
     type: 'info' | 'warning' | 'success';
+    issueDetails?: IssueDetails; // Added for complex reporting
 }
 
 export interface Bin {
@@ -25,7 +32,7 @@ export interface ChatSession {
     id: string;
     title: string;
     date: string;
-    isPinned?: boolean; // Added property
+    isPinned?: boolean;
     messages: ChatMessage[];
 }
 
@@ -35,4 +42,15 @@ export interface AIAnalysisResult {
     is_edible: boolean;
     ratio: number;
     advice: string;
+}
+
+export interface NotificationItem {
+    id: string;
+    title: string;
+    message: string;
+    date: string;
+    type: 'info' | 'warning' | 'success';
+    isRead: boolean;
+    isArchived?: boolean;
+    isTrash?: boolean;
 }

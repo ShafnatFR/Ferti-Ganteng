@@ -2,10 +2,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { geminiService } from '../services/GeminiService';
 import { AIAnalysisResult } from '../types';
+import { Icons } from '../components/Icons';
 
 export const SmartScanner = ({ onAnalyzeSuccess, onBack }: { onAnalyzeSuccess: (img: string, result: AIAnalysisResult) => void, onBack: () => void }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -45,6 +47,22 @@ export const SmartScanner = ({ onAnalyzeSuccess, onBack }: { onAnalyzeSuccess: (
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+          setLoading(true);
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+              const base64data = reader.result as string;
+              // Analisis gambar upload
+              const result = await geminiService.analyzeWasteImage(base64data);
+              onAnalyzeSuccess(base64data, result);
+              setLoading(false);
+          };
+          reader.readAsDataURL(file);
+      }
+  };
+
   return (
     <div className="fixed inset-0 bg-black z-50 flex flex-col">
       <div className="relative flex-1 bg-gray-900 overflow-hidden">
@@ -57,8 +75,8 @@ export const SmartScanner = ({ onAnalyzeSuccess, onBack }: { onAnalyzeSuccess: (
         <canvas ref={canvasRef} className="hidden" />
         
         <div className="absolute inset-0 pointer-events-none">
-          <div className="w-full h-full border-2 border-sage-400 opacity-30 relative">
-             <div className="absolute top-0 left-0 w-full h-1 bg-sage-400 shadow-[0_0_15px_rgba(141,163,153,1)] animate-scan"></div>
+          <div className="w-full h-full border-2 border-primary-500 opacity-30 relative">
+             <div className="absolute top-0 left-0 w-full h-1 bg-primary-500 shadow-[0_0_15px_rgba(255,117,31,0.8)] animate-scan"></div>
           </div>
           <div className="absolute top-10 left-10 w-16 h-16 border-t-4 border-l-4 border-white rounded-tl-xl"></div>
           <div className="absolute top-10 right-10 w-16 h-16 border-t-4 border-r-4 border-white rounded-tr-xl"></div>
@@ -73,8 +91,10 @@ export const SmartScanner = ({ onAnalyzeSuccess, onBack }: { onAnalyzeSuccess: (
         </div>
       </div>
 
-      <div className="h-32 bg-black flex items-center justify-center relative">
-        <button onClick={onBack} className="absolute left-6 text-white text-sm">Kembali</button>
+      <div className="h-32 bg-black flex items-center justify-center relative gap-8">
+        <button onClick={onBack} className="absolute left-6 text-white text-sm font-bold">Kembali</button>
+        
+        {/* Shutter Button */}
         <button 
           onClick={capture}
           disabled={loading}
@@ -82,6 +102,25 @@ export const SmartScanner = ({ onAnalyzeSuccess, onBack }: { onAnalyzeSuccess: (
         >
            <div className="w-16 h-16 bg-white rounded-full"></div>
         </button>
+
+        {/* Gallery Upload Button */}
+        <button 
+          onClick={() => fileInputRef.current?.click()}
+          disabled={loading}
+          className="absolute right-8 text-white flex flex-col items-center gap-1 hover:text-primary-400 transition-colors"
+        >
+            <div className="w-12 h-12 rounded-full bg-gray-800 border border-gray-600 flex items-center justify-center">
+                <Icons.Image className="w-6 h-6" />
+            </div>
+            <span className="text-[10px]">Galeri</span>
+        </button>
+        <input 
+            type="file" 
+            ref={fileInputRef} 
+            hidden 
+            accept="image/*" 
+            onChange={handleFileUpload} 
+        />
       </div>
     </div>
   );
